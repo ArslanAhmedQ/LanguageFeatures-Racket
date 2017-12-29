@@ -1,0 +1,43 @@
+#lang racket
+#| Assignment 2 - Q3
+
+This file contains Question 3. The class constructor
+|#
+(provide class-init)
+
+#|
+(define (my-replace <expr>)
+  (if (list? <expr>)
+      (map my-replace <expr>)
+      <expr>))
+
+(define (my-eval <expr>)
+  (if (list? <expr>)
+      (map my-replace <expr>)
+      <expr>))
+|#
+
+
+(define-syntax class-init
+  (syntax-rules ()
+    [(class-init <Class> ([<arg> = <val>] ...)
+                 [(instance <var> <eval>) ...]
+                 [(self <attr> <expr>) ...]
+                 [(<method> <param> ...) <body>] ...)
+      (define (<Class> [<arg> <val>] ...)
+        (let ([<var> <eval>] ...)
+          (define <attr> <expr>)
+          ...
+          (lambda (msg)
+            (cond [(equal? msg (id->string <attr>)) <attr>]
+                  ...
+                  [(equal? msg (id->string <method>))
+                   (lambda (<param> ...) <body>)]
+                  ...
+                  [else "Unrecognized message!"]))
+          ))]))
+
+(define-syntax id->string
+  (syntax-rules ()
+    [(id->string <id>)
+     (symbol->string (quote <id>))]))
